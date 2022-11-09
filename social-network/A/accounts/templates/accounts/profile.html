@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="text-center">{{ user.username }}</h2>
+    {% if request.user.id == user.id %}
+        <a href="{% url 'home:create' %}" class="btn btn-outline-light">Create</a>
+    {% endif %}
+    {% if request.user.id != user.id and not is_following%}
+        <a class="btn btn-success" href="{% url 'accounts:user_follow' user.id%}">Follow</a>
+    {% elif request.user.id != user.id and is_following%}
+        <a class="btn btn-danger" href="{% url 'accounts:user_unfollow' user.id%}">UnFollow</a>
+    {% endif %}
+
+    <div class="row d-flex justify-content-center">
+        {% for post in posts %}
+            <div class="col-3 m-5 card bg-dark text-light border border-light">
+                <img class="card-img-top mt-2" src="{{ post.image.url }}" alt="Card image cap">
+                <a href="{% url 'accounts:user_profile' post.user.id %}"
+                   class="mt-2 text-info text-decoration-none">{{ post.user.username }}</a>
+                <small>{{ post.created.date }}</small>
+                <br>
+                <div class="card-body p-0">
+                    <p class="card-text">{{ post.body }}</p>
+                    <br>
+                    <br>
+
+
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-primary mb-3">Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if request.user.id == post.user.id %}
+    <div class="d-flex flex-row-reverse">
+        <a href="{% url 'home:delete' post.id %}" class="btn btn-danger p-2 ms-3">Delete</a>
+        <a href="{% url 'home:update' post.id %}" class="btn btn-info p-2">Update</a>
+    </div>
+    {% endif %}
+    <p class="text-light"><a class="text-decoration-none" href="{% url 'accounts:user_profile' post.user.id%}">{{ post.user }}</a> - {{ post.updated|date:"Y-M" }}</p>
+    <p class="text-light ">{{ post.body }}</p>
+    <hr>
+
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'home:like' post.id %}" class="{% if can_like %}disabled{% endif %} btn btn-primary w-25">Like {{ post.likes_count }}</a>
+
+        <form action="" method="post" class="text-light my-5">
+        {% csrf_token %}
+        {{ form.as_p }}
+            <input type="submit" value="Send" class="btn btn-outline-light">
+        </form>
+    {% else %}
+        <p class="alert alert-danger">Only loggedin users can comment</p>
+    {% endif %}
+
+    <p class="text-light">{{ comments.count }} comments</p>
+    {% for comment in comments %}
+        <div class="card text-light mt-3 bg-secondary pb-3">
+        <p class="card-header bg-secondary">{{ comment.user }} | {{ comment.created|timesince }}</p>
+        <p class="card-body bg-dark"> {{ comment.body }}</p>
+        {% if request.user.is_authenticated %}
+
+            <div class="ms-3 mb-5">
+            <form action="{% url 'home:reply' post.id comment.id %}" method="post">
+                {% csrf_token %}
+                {{ reply_form.as_p }}
+                <input type="submit" value="Send" class="btn btn-outline-dark">
+            </form>
+            </div>
+        {% endif %}
+        {% with replies=comment.rcomments.all %}
+        {% for reply in replies %}
+            <div class="card bg-dark text-light p-2 w-50 ms-5 mt-2">
+            <p>{{ reply.user }}<br>{{ reply.body }}</p>
+        </div>
+        {% endfor %}
+        {% endwith %}
+        </div>
+    {% empty %}
+        <p>No comments</p>
+    {% endfor %}
+{% endblock %}

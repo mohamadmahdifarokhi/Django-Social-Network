@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="" method="get">
+        {{ form.as_p }}
+        <input class="btn btn-outline-light" type="submit" value="Search">
+    </form>
+    <div class="row d-flex justify-content-center">
+        {% for post in posts %}
+            <div class="col-3 m-5 card bg-dark text-light border border-light">
+                <img class="card-img-top mt-2" src="{{ post.image.url }}" alt="Card image cap">
+                <a href="{% url 'accounts:user_profile' post.user.id %}"
+                   class="mt-2 text-info text-decoration-none">{{ post.user.username }}</a>
+                <small>{{ post.created.date }}</small>
+                <br>
+                <div class="card-body p-0">
+                    <p class="card-text">{{ post.body }}</p>
+                    <br>
+                    <br>
+
+
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-primary mb-3">Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

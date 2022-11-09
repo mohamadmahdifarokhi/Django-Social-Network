@@ -1,0 +1,20 @@
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark border-bottom border-1 border-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="{% url 'home:home' %}">Home</a>
+        {% if request.user.is_authenticated %}
+
+            <a class="nav-link active" href="{% url 'accounts:user_profile' request.user.id %}">Profile</a>
+            <a class="nav-link active" href="{% url 'accounts:user_logout' %}">Logout</a>
+        {% else %}
+            <a class="nav-link active" href="{% url 'accounts:user_register' %}">Register</a>
+            <a class="nav-link active" href="{% url 'accounts:user_login' %}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
